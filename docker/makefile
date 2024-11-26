@@ -1,11 +1,8 @@
 USERNAME = gr00vysky
 IMAGE_NAME = devops-agent-multi-arch
-TARGETARCHS = amd64 arm64  
   
-.PHONY: build push  
+.PHONY: build  
   
 build:  
-	$(foreach arch,$(TARGETARCHS), docker build --build-arg TARGETARCH=linux-$(arch) -t $(USERNAME)/$(IMAGE_NAME):$(arch) . ;)  
-  
-push:  
-	$(foreach arch,$(TARGETARCHS), docker push $(USERNAME)/$(IMAGE_NAME):$(arch) ;)  
+	docker buildx build --platform linux/amd64 --build-arg TARGETARCH=linux-x64 --push -t $(USERNAME)/$(IMAGE_NAME):amd64 .;
+	docker buildx build --platform linux/arm64 --build-arg TARGETARCH=linux-arm64 --push -t $(USERNAME)/$(IMAGE_NAME):arm64 .;
